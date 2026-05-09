@@ -2,7 +2,7 @@ import { Song } from "../models/song.model.js";
 import { Album } from "../models/album.model.js";
 import cloudinary from "../lib/cloudinary.js";
 
-//helper function for cloudinary uploads
+
 const uploadToCloudinary = async (file) => {
   try {
     const result = await cloudinary.uploader.upload(file.tempFilePath, {
@@ -17,7 +17,7 @@ const uploadToCloudinary = async (file) => {
 
 export const createSong = async (req, res, next) => {
   try {
-    //jedno jest true to return
+    
     if (!req.files || !req.files.audioFile || !req.files.imageFile) {
       return res.status(400).json({ message: "Please upload all files" });
     }
@@ -38,7 +38,7 @@ export const createSong = async (req, res, next) => {
     });
     await song.save();
 
-    //if song belgons to an album, update the albums songs array
+    
     if (albumId) {
       await Album.findByIdAndUpdate(albumId, {
         $push: { songs: song._id },
@@ -56,7 +56,7 @@ export const deleteSong = async (req, res, next) => {
     const { id } = req.params;
     const song = await Song.findyById(id);
 
-    // if songs belongs to an album update te album first
+    
     if (song.albumId) {
       await Album.findByIdAndUpdate({
         $pull: { songs: song._id },

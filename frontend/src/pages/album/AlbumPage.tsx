@@ -30,7 +30,7 @@ const AlbumPage = () => {
     );
     if (isCurrentAlbumPlaying) togglePlay();
     else {
-      //start playing the album from beginning
+      
       playAlbum(currentAlbum?.songs, 0);
     }
   };
@@ -43,16 +43,16 @@ const AlbumPage = () => {
   return (
     <div className="h-full">
       <ScrollArea className="h-full rounded-md">
-        {/* Main Content */}
+        {}
         <div className="relative min-h-screen">
-          {/* bg gradient */}
+          {}
           <div
             className="absolute inset-0 bg-linear-to-b from-[#5038a0]/80 via-zinc-900/80
 					 to-zinc-900 pointer-events-none"
             aria-hidden="true"
           />
 
-          {/* Content */}
+          {}
           <div className="relative z-10">
             <div className="flex p-6 gap-6 pb-8">
               <img
@@ -75,7 +75,7 @@ const AlbumPage = () => {
               </div>
             </div>
 
-            {/* play button */}
+            {}
             <div className="px-6 pb-4 flex items-center gap-6">
               <Button
                 onClick={handlePlayAlbum}
@@ -94,9 +94,9 @@ const AlbumPage = () => {
               </Button>
             </div>
 
-            {/* Table Section */}
+            {}
             <div className="bg-black/20 backdrop-blur-sm">
-              {/* table header */}
+              {}
               <div
                 className="grid grid-cols-[16px_4fr_2fr_1fr] gap-4 px-10 py-2 text-sm 
             text-zinc-400 border-b border-white/5"
@@ -109,7 +109,7 @@ const AlbumPage = () => {
                 </div>
               </div>
 
-              {/* songs list */}
+              {}
 
               <div className="px-6">
                 <div className="space-y-2 py-4">

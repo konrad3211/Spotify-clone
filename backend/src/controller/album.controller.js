@@ -13,7 +13,7 @@ export const getAllAlbums = async (req, res, next) => {
 export const getAlbumById = async (req, res, next) => {
   try {
     const { albumId } = req.params;
-    //! to pupoulate pobierze wszystkie piosneki po ich id ktore znajduja sie w album, bez populate zwroci same ich id
+    
     const album = await Album.findById(albumId).populate("songs");
     if (!album) {
       return res.status(404).json({ message: "Album not found" });

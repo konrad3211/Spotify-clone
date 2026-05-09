@@ -3,7 +3,7 @@ import { Message } from "../models/message.model.js";
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    //nasze id
+    
     const currentUserId = req.userId;
     const users = await User.find({ clerkId: { $ne: currentUserId } });
     res.status(200).json(users);
