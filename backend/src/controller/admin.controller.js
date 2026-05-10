@@ -5,13 +5,17 @@ import cloudinary from "../lib/cloudinary.js";
 
 const uploadToCloudinary = async (file) => {
   try {
-    const result = await cloudinary.uploader.upload(file.tempFilePath, {
+    const res = await cloudinary.uploader.upload(file.tempFilePath, {
       resource_type: "auto",
     });
-    return result.secure_url;
+    
+    return {
+      url: res.secure_url,
+      publicId: res.public_id,
+    };
   } catch (error) {
     console.log("Error in uploadToCloudinary", error);
-    throw new Error("Error uploading to cloudinary");
+    throw new Error(`Cloudinary upload failed: ${error.message}`);
   }
 };
 
@@ -28,15 +32,16 @@ export const createSong = async (req, res, next) => {
     const audioUrl = await uploadToCloudinary(audioFile);
     const imageUrl = await uploadToCloudinary(imageFile);
 
-    const song = new Song({
-      title,
-      artist,
-      audioUrl,
-      imageUrl,
-      duration,
-      albumId: albumId || null,
-    });
-    await song.save();
+      const song = await Song.create({
+    title,
+    artist,
+    audioUrl: audioUrl.url,
+    audioPublicId: audioUrl.publicId,
+    imageUrl: imageUrl.url,
+    imagePublicId: imageUrl.publicId,
+    duration,
+    albumId: albumId || null,
+  });
 
     
     if (albumId) {
@@ -56,12 +61,16 @@ export const deleteSong = async (req, res, next) => {
     const { id } = req.params;
     const song = await Song.findyById(id);
 
+  await cloudinary.uploader.destroy(song.imagePublicId);
+  await cloudinary.uploader.destroy(song.audioPublicId, {
+    resource_type: "video",
+  });
     
-    if (song.albumId) {
-      await Album.findByIdAndUpdate({
-        $pull: { songs: song._id },
-      });
-    }
+  if (song.albumId) {
+    await Album.findByIdAndUpdate(song.albumId, {
+      $pull: { songs: song._id },
+    });
+  }
 
     await Song.findByIdAndDelete(id);
 
