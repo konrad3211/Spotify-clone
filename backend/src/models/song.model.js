@@ -4,15 +4,25 @@ const songSchema = new mongoose.Schema(
   {
     title: {
       type: String,
+      required: true,
     },
     artist: {
       type: String,
+      required: true,
     },
     imageUrl: {
       type: String,
       required: true,
     },
     audioUrl: {
+      type: String,
+      required: true,
+    },
+    audioPublicId: {
+      type: String,
+      required: true,
+    },
+    imagePublicId: {
       type: String,
       required: true,
     },
