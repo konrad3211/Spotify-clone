@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const albumsSchema = new mongoose.Schema(
+const albumSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -13,7 +13,10 @@ const albumsSchema = new mongoose.Schema(
     imageUrl: {
       type: String,
       required: true,
-      unique: true,
+    },
+    imagePublicId: {
+      type: String,
+      required: true,
     },
     releaseYear: {
       type: Number,
@@ -31,4 +34,4 @@ const albumsSchema = new mongoose.Schema(
   },
 );
 
-export const Album = mongoose.model("Album", albumsSchema);
+export const Album = mongoose.model("Album", albumSchema);

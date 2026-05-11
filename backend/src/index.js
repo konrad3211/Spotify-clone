@@ -36,7 +36,7 @@ app.use(
     tempFileDir: path.join(__dirname, "tmp"),
     createParentPath: true,
     limits: {
-      fileSize: 10 * 1024 * 1024, 
+      fileSize: 10 * 1024 * 1024,
     },
   }),
 );
@@ -69,7 +69,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
-
 
 app.use((err, req, res, next) => {
   res.status(500).json({
