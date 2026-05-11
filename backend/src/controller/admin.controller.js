@@ -59,7 +59,7 @@ export const createSong = async (req, res, next) => {
 export const deleteSong = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const song = await Song.findyById(id);
+    const song = await Song.findById(id);
 
   await cloudinary.uploader.destroy(song.imagePublicId);
   await cloudinary.uploader.destroy(song.audioPublicId, {
