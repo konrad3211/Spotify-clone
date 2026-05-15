@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import axios from "axios";
 import { axiosInstance } from "../lib/axios";
 import type { Album, Song, Stats } from "@/types";
 import toast from "react-hot-toast";
@@ -180,7 +181,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       toast.success("Album deleted successfully");
     } catch (error) {
       set({ error: getErrorMessage(error) });
-      toast.error("Failed to delete album: " + error.message);
+      toast.error(getErrorMessage(error));
     } finally {
       set({ isLoading: false });
     }
