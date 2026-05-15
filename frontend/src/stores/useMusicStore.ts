@@ -154,11 +154,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       await axiosInstance.delete(`/admin/albums/${id}`);
       set((state) => ({
         albums: state.albums.filter((album) => album._id !== id),
-        songs: state.songs.map((song) =>
-          song.albumId === state.albums.find((a) => a._id === id)?.title
-            ? { ...song, album: null }
-            : song,
-        ),
+        songs: state.songs.filter(song => song.albumId !== id)
       }));
       toast.success("Album deleted successfully");
     } catch (error: any) {
