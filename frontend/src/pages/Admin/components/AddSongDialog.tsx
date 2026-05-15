@@ -142,7 +142,7 @@ const AddSongDialog = () => {
                     Image selected:
                   </div>
                   <div className="text-xs text-zinc-400">
-                    {files.image.name.slice(0, 20)}
+                    {files.image.name.slice(0, 20) + "..."}
                   </div>
                 </div>
               ) : (
@@ -171,7 +171,7 @@ const AddSongDialog = () => {
                 className="w-full"
               >
                 {files.audio
-                  ? files.audio.name.slice(0, 20)
+                  ? files.audio.name.slice(0, 20) + "..."
                   : "Choose Audio File"}
               </Button>
             </div>
