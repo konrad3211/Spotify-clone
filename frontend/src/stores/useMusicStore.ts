@@ -3,6 +3,12 @@ import { axiosInstance } from "../lib/axios";
 import type { Album, Song, Stats } from "@/types";
 import toast from "react-hot-toast";
 
+const getErrorMessage = (error: unknown): string => {
+  return axios.isAxiosError(error)
+    ? error.response?.data?.message || "Something went wrong"
+    : "Something went wrong";
+};
+
 interface MusicStore {
   songs: Song[];
   albums: Album[];
@@ -64,7 +70,6 @@ export const useMusicStore = create<MusicStore>((set) => ({
         },
       });
       set((state) => ({
-        //to doda nowa piosenke na poczatek tablicy, jezeli byloby na poczatku ... to nowa piosenka bylaby na koncu
         songs: [res.data, ...state.songs],
       }));
     } catch (error) {
@@ -79,9 +84,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
     try {
       const res = await axiosInstance.get(`/albums/${id}`);
       set({ currentAlbum: res.data });
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Something went wrong";
-      set({ error: message });
+    } catch (error) {
+      set({ error: getErrorMessage(error) });
     } finally {
       set({ isLoading: false });
     }
@@ -93,9 +97,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
     try {
       const res = await axiosInstance.get("/songs/featured");
       set({ featuredSongs: res.data });
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Something went wrong";
-      set({ error: message });
+    } catch (error) {
+      set({ error: getErrorMessage(error) });
     } finally {
       set({ isLoading: false });
     }
@@ -107,8 +110,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       const res = await axiosInstance.get("/songs/made-for-you");
       set({ madeForYouSongs: res.data });
     } catch (error: any) {
-      const message = error.response?.data?.message || "Something went wrong";
-      set({ error: message });
+      set({ error: getErrorMessage(error) });
     } finally {
       set({ isLoading: false });
     }
@@ -119,9 +121,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
     try {
       const res = await axiosInstance.get("/songs/trending");
       set({ trendingSongs: res.data });
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Something went wrong";
-      set({ error: message });
+    } catch (error) {
+      set({ error: getErrorMessage(error) });
     } finally {
       set({ isLoading: false });
     }
@@ -132,8 +133,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
     try {
       const response = await axiosInstance.get("/songs");
       set({ songs: response.data });
-    } catch (error: any) {
-      set({ error: error.message });
+    } catch (error) {
+      set({ error: getErrorMessage(error) });
     } finally {
       set({ isLoading: false });
     }
@@ -144,8 +145,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
     try {
       const response = await axiosInstance.get("/stats");
       set({ stats: response.data });
-    } catch (error: any) {
-      set({ error: error.message });
+    } catch (error) {
+      set({ error: getErrorMessage(error) });
     } finally {
       set({ isLoading: false });
     }
@@ -160,8 +161,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
         songs: state.songs.filter((song) => song._id !== id),
       }));
       toast.success("Song deleted successfully");
-    } catch (error: any) {
-      console.log("Error in deleteSong", error);
+    } catch (error) {
+      set({ error: getErrorMessage(error) });
       toast.error("Error deleting song");
     } finally {
       set({ isLoading: false });
@@ -177,7 +178,8 @@ export const useMusicStore = create<MusicStore>((set) => ({
         songs: state.songs.filter(song => song.albumId !== id)
       }));
       toast.success("Album deleted successfully");
-    } catch (error: any) {
+    } catch (error) {
+      set({ error: getErrorMessage(error) });
       toast.error("Failed to delete album: " + error.message);
     } finally {
       set({ isLoading: false });
