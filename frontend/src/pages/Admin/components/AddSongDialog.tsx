@@ -54,12 +54,10 @@ const AddSongDialog = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-
     try {
       if (!files.audio || !files.image) {
         return toast.error("Please upload both audio and image files");
       }
-
       const formData = new FormData();
 
       formData.append("title", newSong.title);
@@ -72,11 +70,7 @@ const AddSongDialog = () => {
       formData.append("audioFile", files.audio);
       formData.append("imageFile", files.image);
 
-      await axiosInstance.post("/admin/songs", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await addSong(formData);
 
       setNewSong({
         title: "",
@@ -89,6 +83,7 @@ const AddSongDialog = () => {
         audio: null,
         image: null,
       });
+      setSongDialogOpen(false);
       toast.success("Song added successfully");
     } catch (error: any) {
       toast.error("Failed to add song: " + error.message);
