@@ -23,6 +23,8 @@ interface MusicStore {
   fetchSongs: () => Promise<void>;
   deleteSong: (id: string) => Promise<void>;
   deleteAlbum: (id: string) => Promise<void>;
+  addSong: (formData: FormData) => Promise<void>;
+
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -49,6 +51,24 @@ export const useMusicStore = create<MusicStore>((set) => ({
     } catch (error: any) {
       const message = error.response?.data?.message || "Something went wrong";
       set({ error: message });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  addSong: async (formData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await axiosInstance.post("/admin/songs", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      set((state) => ({
+        //to doda nowa piosenke na poczatek tablicy, jezeli byloby na poczatku ... to nowa piosenka bylaby na koncu
+        songs: [res.data, ...state.songs],
+      }));
+    } catch (error) {
+      set({ error: getErrorMessage(error) });
     } finally {
       set({ isLoading: false });
     }
