@@ -4,7 +4,12 @@ import { useChatStore } from "@/stores/useChatStore";
 import { useUser } from "@clerk/react";
 import { Send } from "lucide-react";
 
-const MessageInput = ({ newMessage, setNewMessage }) => {
+type MessageInputProps = {
+  newMessage: string;
+  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const MessageInput = ({ newMessage, setNewMessage }: MessageInputProps) => {
   const { user } = useUser();
   const { selectedUser, sendMessage, socket } = useChatStore();
 
@@ -22,6 +27,9 @@ const MessageInput = ({ newMessage, setNewMessage }) => {
           value={newMessage}
           onChange={(e) => {
             setNewMessage(e.target.value);
+
+            if (!selectedUser) return;
+
             socket.emit("typing", {
               receiverId: selectedUser.clerkId,
             });
