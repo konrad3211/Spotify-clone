@@ -2,7 +2,7 @@ import { TopBar } from "@/components/Topbar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChatStore } from "@/stores/useChatStore";
 import { useUser } from "@clerk/react";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import UsersList from "./components/UsersList";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import ChatHeader from "./components/ChatHeader";
@@ -17,18 +17,43 @@ const formatTime = (date: string) => {
 };
 
 const ChatPage = () => {
+  const [newMessage, setNewMessage] = useState("");
+
   const { user } = useUser();
-  const { messages, selectedUser, fetchUsers, fetchMessages } = useChatStore();
+  const {
+    messages,
+    selectedUser,
+    fetchMessages,
+    typingUsers,
+    socket,
+    setSelectedUser,
+  } = useChatStore();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages]);
 
   useEffect(() => {
-    if (user) fetchUsers();
-  }, [fetchUsers, user]);
-
-  useEffect(() => {
-    if (selectedUser) fetchMessages(selectedUser.clerkId);
+    if (selectedUser) {
+      fetchMessages(selectedUser.clerkId);
+    }
   }, [fetchMessages, selectedUser]);
 
-  console.log({ messages });
+  useEffect(() => {
+    return () => {
+      setSelectedUser(null);
+    };
+  }, [setSelectedUser]);
+
+  useEffect(() => {
+    if (!selectedUser || !socket.connected) return;
+
+    socket.emit("messages_read", {
+      senderId: selectedUser.clerkId,
+    });
+  }, [messages.length, selectedUser, socket]);
 
   return (
     <main className="h-full rounded-lg bg-linear-to-b from-zinc-800 to-zinc-900 overflow-hidden">
@@ -72,13 +97,28 @@ const ChatPage = () => {
                         <span className="text-xs text-zinc-300 mt-1 block">
                           {formatTime(message.createdAt)}
                         </span>
+                        {message.senderId === user?.id && (
+                          <span className="text-[10px] text-zinc-300 mt-1 block">
+                            {message.read ? "Seen" : "Sent"}
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))}
+
+                  {selectedUser && typingUsers.has(selectedUser.clerkId) && (
+                    <p className="text-xs text-zinc-400 italic px-4">
+                      typing...
+                    </p>
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
               </ScrollArea>
 
-              <MessageInput />
+              <MessageInput
+                newMessage={newMessage}
+                setNewMessage={setNewMessage}
+              />
             </>
           ) : (
             <NoConversationPlaceholder />

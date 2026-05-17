@@ -3,16 +3,14 @@ import { Input } from "@/components/ui/input";
 import { useChatStore } from "@/stores/useChatStore";
 import { useUser } from "@clerk/react";
 import { Send } from "lucide-react";
-import { useState } from "react";
 
-const MessageInput = () => {
-  const [newMessage, setNewMessage] = useState("");
+const MessageInput = ({ newMessage, setNewMessage }) => {
   const { user } = useUser();
-  const { selectedUser, sendMessage } = useChatStore();
+  const { selectedUser, sendMessage, socket } = useChatStore();
 
   const handleSend = () => {
     if (!selectedUser || !user || !newMessage) return;
-    sendMessage(selectedUser.clerkId, user.id, newMessage.trim());
+    sendMessage(selectedUser.clerkId, newMessage.trim());
     setNewMessage("");
   };
 
@@ -22,7 +20,12 @@ const MessageInput = () => {
         <Input
           placeholder="Type a message"
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={(e) => {
+            setNewMessage(e.target.value);
+            socket.emit("typing", {
+              receiverId: selectedUser.clerkId,
+            });
+          }}
           className="bg-zinc-800 border-none"
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />

@@ -21,6 +21,14 @@ export interface Album {
   updatedAt: string;
 }
 
+export interface User {
+  _id: string;
+  clerkId: string;
+  fullName: string;
+  imageUrl: string;
+  createdAt: number;
+}
+
 export interface Stats {
   totalSongs: number;
   totalAlbums: number;
@@ -35,11 +43,5 @@ export interface Message {
   content: string;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface User {
-  _id: string;
-  clerkId: string;
-  fullName: string;
-  imageUrl: string;
+  read: boolean;
 }
