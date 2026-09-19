@@ -6,6 +6,8 @@ The app combines music playback with social features such as real-time messaging
 
 > Learning project built while following the **Codesistency** course and later extended as part of my full-stack development practice with authentication, real-time communication, admin tools, responsive UI, and production deployment.
 
+![Spotify Clone application showcase](./screenshots/spotify-clone-showcase.png)
+
 ## Live Demo
 
 **[spotify.konradpatla.pl](https://spotify.konradpatla.pl)**
