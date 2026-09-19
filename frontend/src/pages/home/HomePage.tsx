@@ -37,15 +37,18 @@ const HomePage = () => {
   }, [initializeQueue, featuredSongs, madeForYouSongs, trendingSongs]);
 
   return (
-    <main className="rounded-md overflow-hidden h-full bg-linear-to-b from-zinc-800 to-zinc-900">
+    <main className="rounded-md overflow-hidden h-full bg-linear-to-b from-zinc-800 to-zinc-900 flex flex-col">
       <TopBar />
-      <ScrollArea className="h-[calc(100vh-180px)]">
-        <div className="p-4 sm:p-6">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-6">
+
+      <ScrollArea className="min-h-0 flex-1">
+        <div className="p-3 sm:p-6">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-5 sm:mb-6">
             Good afternoon
           </h1>
+
           <FeaturedSection />
-          <div className="space-y-8">
+
+          <div className="space-y-6 sm:space-y-8">
             <SectionGrid
               title="Made For You"
               songs={madeForYouSongs}
