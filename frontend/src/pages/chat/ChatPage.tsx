@@ -28,7 +28,9 @@ const ChatPage = () => {
     socket,
     setSelectedUser,
   } = useChatStore();
+
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -56,29 +58,27 @@ const ChatPage = () => {
   }, [messages.length, selectedUser, socket]);
 
   return (
-    <main className="h-full rounded-lg bg-linear-to-b from-zinc-800 to-zinc-900 overflow-hidden">
+    <main className="h-full rounded-lg bg-linear-to-b from-zinc-800 to-zinc-900 overflow-hidden flex flex-col">
       <TopBar />
 
-      <div className="grid lg:grid-cols-[300px_1fr] grid-cols-[80px_1fr] h-[calc(100vh-180px)]">
+      <div className="grid grid-cols-[64px_minmax(0,1fr)] lg:grid-cols-[300px_minmax(0,1fr)] min-h-0 flex-1">
         <UsersList />
 
-        {}
-        <div className="flex flex-col h-full">
+        <div className="flex min-w-0 min-h-0 flex-col">
           {selectedUser ? (
             <>
               <ChatHeader />
 
-              {}
-              <ScrollArea className="h-[calc(100vh-340px)]">
-                <div className="p-4 space-y-4">
+              <ScrollArea className="min-h-0 flex-1">
+                <div className="p-3 sm:p-4 space-y-4">
                   {messages.map((message) => (
                     <div
                       key={message._id}
-                      className={`flex items-start gap-3 ${
+                      className={`flex items-start gap-2 sm:gap-3 ${
                         message.senderId === user?.id ? "flex-row-reverse" : ""
                       }`}
                     >
-                      <Avatar className="size-8">
+                      <Avatar className="size-7 sm:size-8 shrink-0">
                         <AvatarImage
                           src={
                             message.senderId === user?.id
@@ -89,16 +89,24 @@ const ChatPage = () => {
                       </Avatar>
 
                       <div
-                        className={`rounded-lg p-3 max-w-[70%]
-													${message.senderId === user?.id ? "bg-green-500" : "bg-zinc-800"}
-												`}
+                        className={`rounded-xl p-3 max-w-[82%] sm:max-w-[70%] break-words ${
+                          message.senderId === user?.id
+                            ? "bg-green-500 text-black"
+                            : "bg-zinc-800"
+                        }`}
                       >
                         <p className="text-sm">{message.content}</p>
-                        <span className="text-xs text-zinc-300 mt-1 block">
+                        <span
+                          className={`text-xs mt-1 block ${
+                            message.senderId === user?.id
+                              ? "text-black/65"
+                              : "text-zinc-300"
+                          }`}
+                        >
                           {formatTime(message.createdAt)}
                         </span>
                         {message.senderId === user?.id && (
-                          <span className="text-[10px] text-zinc-300 mt-1 block">
+                          <span className="text-[10px] text-black/65 mt-1 block">
                             {message.read ? "Seen" : "Sent"}
                           </span>
                         )}
@@ -107,7 +115,7 @@ const ChatPage = () => {
                   ))}
 
                   {selectedUser && typingUsers.has(selectedUser.clerkId) && (
-                    <p className="text-xs text-zinc-400 italic px-4">
+                    <p className="text-xs text-zinc-400 italic px-2 sm:px-4">
                       typing...
                     </p>
                   )}
@@ -132,7 +140,7 @@ const ChatPage = () => {
 export default ChatPage;
 
 const NoConversationPlaceholder = () => (
-  <div className="flex flex-col items-center justify-center h-full space-y-6">
+  <div className="flex flex-col items-center justify-center h-full px-6 space-y-6">
     <img src="/spotify.png" alt="Spotify" className="size-16 animate-bounce" />
     <div className="text-center">
       <h3 className="text-zinc-300 text-lg font-medium mb-1">
