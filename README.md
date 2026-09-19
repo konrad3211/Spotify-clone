@@ -4,7 +4,7 @@ A full-stack Spotify-inspired music application built with React, TypeScript, Ex
 
 The app combines music playback with social features such as real-time messaging, online status, listening activity, and read receipts. It also includes an admin dashboard for managing songs and albums.
 
-> Learning project built as part of my full-stack development practice and extended with authentication, real-time communication, admin tools, responsive UI, and production deployment.
+> Learning project built while following the **Codesistency** course and later extended as part of my full-stack development practice with authentication, real-time communication, admin tools, responsive UI, and production deployment.
 
 ## Live Demo
 
